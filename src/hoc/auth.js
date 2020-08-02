@@ -2,37 +2,37 @@ import React, { useEffect } from 'react';
 import { auth } from './../_actions/user/user_actions';
 import { useSelector, useDispatch } from "react-redux";
 
-export default function (ComposedClass, reload, adminRoute) {
+export default function (ComposedClass, reload, adminRoute = null) {
     function AuthenticationCheck(props) {
-
+        console.log("props", props)
         let user = useSelector(state => state.user);
+        console.log("userAuth", user)
       
         const dispatch = useDispatch();
 
         useEffect(() => {
 
-            dispatch(auth()).then(response => {
-                console.log("14", response)
-                if (!response.payload.isAuth) {
+            dispatch(auth()).then(async response => {
+                if (await !response.payload.isAuth) {
                     if (reload) {
-                        props.history.push('/register')
-                        console.log("response", response)
+                        alert("AQUI")
+                      //  props.history.push('/register_login')
                     }
                 } else {
                     if (adminRoute && !response.payload.isAdmin) {
-                        props.history.push('/')
-                        console.log("adminRoute", adminRoute)
-                        console.log("isAdmin", response.payload.isAdmin)
+                        alert("AQUI 1 ")
+                        //props.history.push('/')
                     }
                     else {
                         if (reload === false) {
-                            props.history.push('/')
+                            alert("AQUI 2")
+                          //  props.history.push('/')
                         }
                     }
                 }
             })
             
-        }, [dispatch, props.history])
+        }, [dispatch, props.history, user.payload])
 
         return (
             <ComposedClass {...props} user={user} />
@@ -40,5 +40,3 @@ export default function (ComposedClass, reload, adminRoute) {
     }
     return AuthenticationCheck
 }
-
-
