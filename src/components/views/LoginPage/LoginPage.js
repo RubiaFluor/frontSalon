@@ -44,8 +44,9 @@ function LoginPage(props) {
 
           dispatch(loginUser(dataToSubmit))
             .then(response => {
-              if (response.payload.loginSuccess) {
-                window.localStorage.setItem('userId', response.payload.userId);
+              console.log("res", response)
+              if (response.payload.user.loginSuccess) {
+                window.localStorage.setItem('token', response.payload.user.token);
                 if (rememberMe === true) {
                   window.localStorage.setItem('rememberMe', values.id);
                 } else {
@@ -126,9 +127,6 @@ function LoginPage(props) {
 
               <Form.Item>
                 <Checkbox id="rememberMe" onChange={handleRememberMe} checked={rememberMe} >Remember me</Checkbox>
-                <a className="login-form-forgot" href="/reset_user" style={{ float: 'right' }}>
-                  forgot password
-                  </a>
                 <div>
                   <Button type="primary" htmlType="submit" className="login-form-button" style={{ minWidth: '100%' }} disabled={isSubmitting} onSubmit={handleSubmit}>
                     Log in

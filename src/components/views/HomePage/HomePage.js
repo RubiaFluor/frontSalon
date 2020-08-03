@@ -1,17 +1,27 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Row, Col, Typography } from "antd";
+import { Card, Row, Col, Typography, Modal} from "antd";
 
 const { Text } = Typography;
 
-function HomePage() {
-  const user = useSelector((state) => state.user);
 
+function modalErrorListClient(){
+  Modal.error(
+    {
+      content:"Customer list error"
+    }
+  )
+}
+
+function HomePage() {
   const dispatch = useDispatch();
+  const user = useSelector(state => state.user)
 
   const [Clients, setClients] = useState([]);
-  let variable = { userfrom: localStorage.getItem("userId") };
+  let variable = { userfrom: localStorage.getItem("token") };
+
+  console.log("variable",variable)
 
   useEffect(() => {
     fetchClient();
@@ -19,36 +29,44 @@ function HomePage() {
 
   const fetchClient = () => {
     axios
-      .get("http://localhost:9000/api/client/listClient", variable)
+      .get("http://localhost:9000/api/client/listClient/",variable)
       .then((response) => {
-        console.log(response);
-        if (response.data.success) {
-          setClients(response.data.clients);
-          {
-            console.log(response.data.clients);
-          }
-        } else {
-          alert("error traer clients");
-        }
+      console.log("respo", response);
+          if (response.data.success) {
+            setClients(response.data.clients);
+          } else {
+           modalErrorListClient();
+          }    
       });
   };
 
   return (
-    <div>
+    <div className="list-clients">
       <h3>List all Clients </h3>
       {Clients.map((clients) => {
         return (
-          <div className="site-card-wrapper">
+          <div key={clients._id} className="site-card-wrapper" >
             <Row gutter={16}>
               <Col span={8}>
-                <Card title="Sales Today" bordered={false}>
+                <Card title="Card Sales" bordered={false}>
                   <Text strong>Name Client</Text>
                   <br></br>
-                  <span>{clients.nameClient}</span>
+                  <span className="description">{clients.nameClient}</span>
+                  <br></br>
                   <br></br>
                   <Text strong>Name Coiffeur</Text>
                   <br></br>
-                  <span>{clients.nameCoiffeur}</span>
+                  <span className="description">{clients.nameCoiffeur}</span>
+                  <br></br>
+                  <br></br>
+                  <Text strong>Number Ticket</Text>
+                  <br></br>
+                  <span className="description">{clients.numberTicket}</span>
+                  <br></br>
+                  <br></br>
+                  <Text strong>Number Voucher</Text>
+                  <br></br>
+                  <span className="description">{clients.numberVoucher}</span>
                 </Card>
               </Col>
             </Row>
