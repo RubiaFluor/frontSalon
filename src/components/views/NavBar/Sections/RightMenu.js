@@ -11,20 +11,21 @@ function RightMenu(props) {
   const user = useSelector(state => state.user)
 
   const logoutHandler = () => {
-    axios.get(`${USER_SERVER}/logout`).then(response => {
+    axios.get(`${USER_SERVER}/user/logout`).then(response => {
       if (response.status === 200) {
-        props.history.push("/login");
+        props.history.push("/");
       } else {
         alert('Log Out Failed')
       }
     });
   };
 
-  if (user.userData && !user.userData.isAuth) {
+  if (user.loginSuccess && !user.isAuth) {
+    console.log("user",user.user)
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="mail">
-          <a href="/login">Signin</a>
+          <a href="/">Signin</a>
         </Menu.Item>
         <Menu.Item key="app">
           <a href="/register">Signup</a>
